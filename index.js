@@ -34,6 +34,7 @@ function startApp() {
         "Add Employee",
         "Remove Employee",
         "Update Employee Role",
+        "Update Employee Manager",
         "EXIT"
         ]
     })
@@ -73,6 +74,10 @@ function startApp() {
 
         case "Update Employee Role":
         updateEmployeeRole();
+        break;
+
+        case "Update Employee Manager":
+        updateEmployeeMng();
         break;
 
         case "EXIT":
@@ -125,14 +130,6 @@ function addEmployee() {
         roleChoice.push(roleList);
     };
 
-    var managerChoice = [];
-    connection.query("SELECT id, first_name, last_name FROM employees", function(err, resEmp) {
-        if (err) throw err;
-        for (var i = 0; i < resEmp.length; i++) {
-            var empList = resEmp[i].first_name + " " + resEmp[i].last_name;
-            managerChoice.push(empList);
-    };
-
     var deptChoice = [];
     connection.query("SELECT * FROM departments", function(err, resDept) {
         if (err) throw err;
@@ -159,12 +156,6 @@ function addEmployee() {
         choices: roleChoice
     },
     {
-        name: "manager_id",
-        type: "rawlist",
-        message: "Select employee's manager:",
-        choices: managerChoice
-    },
-    {
         name: "department_id",
         type: "rawlist",
         message: "Select employee's department:",
@@ -180,13 +171,6 @@ function addEmployee() {
             }
         };
 
-        var chosenManager;
-        for (var i = 0; i < resEmp.length; i++) {
-            if (resEmp[i].first_name || resRole[i].last_name === answer.manager_id) {
-                chosenManager = resEmp[i];
-            }
-        };
-
         var chosenDept;
         for (var i = 0; i < resDept.length; i++) {
             if (resDept[i].name === answer.department_id) {
@@ -199,7 +183,6 @@ function addEmployee() {
             first_name: answer.firstName,
             last_name: answer.lastName,
             role_id: chosenRole.id,
-            manager_id: chosenManager.id,
             department_id: chosenDept.id
         },
         function(err) {
@@ -210,7 +193,6 @@ function addEmployee() {
         );
     })
     });
-})
 })
 };
 
@@ -291,10 +273,10 @@ function addRole() {
 
 function removeEmployee() {
     var empChoice = [];
-    connection.query("SELECT id, first_name, last_name FROM employees", function(err, resEmp) {
+    connection.query("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM employees", function(err, resEmp) {
         if (err) throw err;
         for (var i = 0; i < resEmp.length; i++) {
-            var empList = resEmp[i].first_name + " " + resEmp[i].last_name;
+            var empList = resEmp[i].name;
             empChoice.push(empList);
         };
     inquirer
@@ -309,7 +291,7 @@ function removeEmployee() {
     .then(function(answer) {
         var chosenEmp;
         for (var i = 0; i < resEmp.length; i++) {
-            if (resEmp[i].first_name || resRole[i].last_name === answer.employee_id) {
+            if (resEmp[i].name === answer.employee_id) {
                 chosenEmp = resEmp[i];
             }
         };
@@ -328,10 +310,10 @@ function removeEmployee() {
 
 function updateEmployeeRole() {
     var empChoice = [];
-    connection.query("SELECT id, first_name, last_name FROM employees", function(err, resEmp) {
+    connection.query("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM employees", function(err, resEmp) {
         if (err) throw err;
         for (var i = 0; i < resEmp.length; i++) {
-            var empList = resEmp[i].first_name + " " + resEmp[i].last_name;
+            var empList = resEmp[i].name;
             empChoice.push(empList);
         };
 
@@ -362,7 +344,7 @@ function updateEmployeeRole() {
 
     var chosenEmp;
             for (var i = 0; i < resEmp.length; i++) {
-            if (resEmp[i].first_name || resRole[i].last_name === answer.employee_id) {
+            if (resEmp[i].name === answer.employee_id) {
                 chosenEmp = resEmp[i];
             }
         };

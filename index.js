@@ -17,7 +17,7 @@ console.log(data)
 var connection = mysql.createConnection({
     host: "localhost",
     // Your port; if not 3306
-    port: 8884,
+    port: 3213,
     // Your username
     user: "root",
     // Your password

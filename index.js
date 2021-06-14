@@ -17,11 +17,11 @@ console.log(data)
 var connection = mysql.createConnection({
     host: "localhost",
     // Your port; if not 3306
-    port: 3306,
+    port: 8884,
     // Your username
     user: "root",
     // Your password
-    password: "shadowKING70",
+    password: " ",
     database: "employeeDb"
 });
 

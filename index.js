@@ -369,3 +369,56 @@ function updateEmployeeRole() {
     })
     })
 };
+
+function updateEmployeeMng() {
+
+    var empChoice = [];
+        connection.query("SELECT id, CONCAT(first_name, ' ', last_name) AS name FROM employees", function(err, resEmp) {
+            if (err) throw err;
+            for (var i = 0; i < resEmp.length; i++) {
+            var empList = resEmp[i].name;
+            empChoice.push(empList);
+        };
+    
+        inquirer
+        .prompt([
+        {
+            name:"employees",
+            type: "rawlist",
+            message: "Select employee you would like to update manager:",
+            choices: empChoice
+        },
+        {
+            name: "Managerid",
+            type: "rawlist",
+            message: "Select Manager among employees:",
+            choices: empChoice
+        }
+        ])
+        .then(function(answer) {
+    
+        var chosenEmp;
+            for (var i = 0; i < resEmp.length; i++) {
+                if (resEmp[i].name === answer.employees) {
+                chosenEmp = resEmp[i];
+            }
+            };
+            var chosenManager;
+            for (var i = 0; i < resEmp.length; i++) {
+                if (resEmp[i].name === answer.Managerid) {
+                chosenManager = resEmp[i];
+            }
+            };
+            connection.query(
+            "UPDATE employees SET manager_id = ? WHERE id = ?",
+    
+            [chosenManager.id, chosenEmp.id],
+            function(err) {
+                if (err) throw err;
+                console.log("Employee Manager successfully updated!");
+                startApp();
+            }
+            );
+        })
+        })
+};

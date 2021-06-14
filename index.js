@@ -1,6 +1,18 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var consoleTable = require("console.table");
+var figlet = require('figlet');
+
+//code from figlet module to display a drawing of employee tracker on the command line
+figlet('EMPLOYEE TRACKER!!', function(err, data) {
+    if (err) {
+        console.log('Something went wrong...');
+    console.dir(err);
+    return;
+}
+console.log(data)
+});
+
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -81,6 +93,7 @@ function startApp() {
         break;
 
         case "EXIT":
+        console.log("Thanks for using Employee Tracker! Have a nice day!")
         process.exit();
         }
     });
